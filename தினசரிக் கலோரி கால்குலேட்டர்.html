@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="ta">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>தினசரிக் கலோரி கால்குலேட்டர்</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@400;600;800&amp;display=swap" rel="stylesheet">
+<style>
+:root{--bg:#FBF7EF;--card:#FFFFFF;--ink:#2B2B2B;--mute:#5A5A5A;--green:#1F5E3B;--gold:#B26F00;--line:#D9D2C3;--soft:#E4F1E6;--warn:#9A3412;--warnbg:#FFF1E6;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14201A;--card:#1C2B23;--ink:#F1EDE3;--mute:#B9C2BB;--green:#7FD1A0;--gold:#F6C85F;--line:#33463B;--soft:#223A2D;--warn:#FFB38A;--warnbg:#3A2A20}}
+:root[data-theme="dark"]{--bg:#14201A;--card:#1C2B23;--ink:#F1EDE3;--mute:#B9C2BB;--green:#7FD1A0;--gold:#F6C85F;--line:#33463B;--soft:#223A2D;--warn:#FFB38A;--warnbg:#3A2A20}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Noto Sans Tamil','Latha','Nirmala UI',sans-serif;line-height:1.6;font-size:17px}
+main{max-width:560px;margin:0 auto;padding:20px 16px 40px}
+h1{font-size:26px;line-height:1.3;color:var(--green);margin:0 0 4px}
+.sub{color:var(--mute);margin:0 0 18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:16px}
+label{display:block;font-weight:600;margin:12px 0 6px}
+input,select{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:11px 12px}
+input:focus,select:focus,button:focus-visible{outline:3px solid var(--gold);outline-offset:1px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.seg input{position:absolute;opacity:0;width:1px;height:1px}
+.seg label{margin:0;text-align:center;border:1px solid var(--line);border-radius:10px;padding:10px;cursor:pointer;font-weight:600}
+.seg input:checked+label{background:var(--green);color:var(--bg);border-color:var(--green)}
+.seg input:focus-visible+label{outline:3px solid var(--gold);outline-offset:1px}
+button.go{width:100%;margin-top:18px;font:inherit;font-weight:800;font-size:19px;padding:14px;border:0;border-radius:12px;background:var(--green);color:var(--bg);cursor:pointer}
+.big{font-size:44px;font-weight:800;color:var(--green);line-height:1.1}
+.big small{font-size:18px;font-weight:600;color:var(--mute)}
+.kv{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px dashed var(--line)}
+.kv:last-child{border-bottom:0}
+.kv b{white-space:nowrap}
+.warn{background:var(--warnbg);color:var(--warn);border-radius:12px;padding:12px 14px;margin-top:12px;font-weight:600}
+.note{color:var(--mute);font-size:15px}
+.hidden{display:none}
+h2{font-size:19px;margin:0 0 6px;color:var(--green)}
+</style>
+</head>
+<body>
+<main>
+<h1>தினசரிக் கலோரி கால்குலேட்டர்</h1>
+<p class="sub">வயது, எடை, உயரம், உடல் உழைப்பை வைத்து ஒரு நாளுக்குத் தேவையான கலோரியைத் தோராயமாகக் கணக்கிடுங்கள்.</p>
+
+<div class="card">
+<div class="seg" role="radiogroup" aria-label="பாலினம்">
+<input type="radio" name="sex" id="m" value="m" checked><label for="m">ஆண்</label>
+<input type="radio" name="sex" id="f" value="f"><label for="f">பெண்</label>
+</div>
+<div class="row">
+<div><label for="age">வயது</label><input id="age" type="number" inputmode="numeric" min="15" max="100" placeholder="எ.கா. 45"></div>
+<div><label for="wt">எடை (கிலோ)</label><input id="wt" type="number" inputmode="decimal" min="25" max="250" placeholder="எ.கா. 70"></div>
+</div>
+<label for="ht">உயரம் (செ.மீ)</label>
+<input id="ht" type="number" inputmode="decimal" min="120" max="230" placeholder="எ.கா. 170">
+<label for="act">உடல் உழைப்பு</label>
+<select id="act">
+<option value="1.2">உட்கார்ந்தே வேலை, உடற்பயிற்சி இல்லை</option>
+<option value="1.375" selected>லேசான உழைப்பு (வாரம் 1-3 நாள் நடை)</option>
+<option value="1.55">மிதமான உழைப்பு (வாரம் 3-5 நாள்)</option>
+<option value="1.725">கடின உழைப்பு (விவசாயம், கட்டட வேலை)</option>
+</select>
+<label for="goal">இலக்கு</label>
+<select id="goal">
+<option value="0">எடை மாறாமல் இருக்க</option>
+<option value="-400">எடை குறைக்க (தினம் 400 கலோரி குறைவு)</option>
+<option value="300">எடை கூட்ட (தினம் 300 கலோரி கூடுதல்)</option>
+</select>
+<button class="go" type="button" id="calc">கணக்கிடு</button>
+<div id="err" class="warn hidden" role="alert"></div>
+</div>
+
+<div id="out" class="hidden">
+<div class="card">
+<div class="note">உங்களுக்கு ஒரு நாளுக்குத் தேவையான கலோரி (தோராயமாக)</div>
+<div class="big"><span id="target">0</span> <small>கலோரி</small></div>
+<div id="lowwarn" class="warn hidden"></div>
+</div>
+<div class="card">
+<h2>கணக்கு விவரம்</h2>
+<div class="kv"><span>ஓய்வில் தேவை (BMR)</span><b id="bmr"></b></div>
+<div class="kv"><span>எடை மாறாமல் இருக்கத் தேவை</span><b id="maint"></b></div>
+<div class="kv"><span>உடல் எடைக் குறியீடு (BMI)</span><b id="bmi"></b></div>
+</div>
+<div class="card">
+<h2>வேளைக்கு எவ்வளவு?</h2>
+<div class="kv"><span>காலை உணவு (25%)</span><b id="b1"></b></div>
+<div class="kv"><span>மதிய உணவு (35%)</span><b id="b2"></b></div>
+<div class="kv"><span>மாலைச் சிற்றுண்டி (10%)</span><b id="b3"></b></div>
+<div class="kv"><span>இரவு உணவு (30%)</span><b id="b4"></b></div>
+<p class="note">மாவுச் சத்து (தோராயமாக 45-55%): <b id="carb"></b></p>
+</div>
+</div>
+
+<p class="note">இது Mifflin-St Jeor சூத்திரத்தைப் பயன்படுத்தும் தோராயக் கணக்கு மட்டுமே. சர்க்கரை அளவு (சுகர் லெவல்) மொத்தக் கலோரியைத் தீர்மானிக்காது; அது மருந்து மற்றும் மாவுச் சத்து அளவைத் தீர்மானிக்க மருத்துவருக்கு உதவும். இன்சுலின் அல்லது சர்க்கரை மாத்திரை போடுபவர்கள், கர்ப்பிணிகள், சிறுநீரகப் பிரச்சினை உள்ளவர்கள், வயதானவர்கள் உணவை மாற்றும் முன் மருத்துவர் அல்லது பதிவு பெற்ற உணவு நிபுணரிடம் கேளுங்கள். இது மருத்துவ ஆலோசனைக்கு மாற்று அல்ல.</p>
+</main>
+<script>
+(function(){
+function $(id){return document.getElementById(id);}
+function fmt(n){return Math.round(n).toLocaleString("en-IN");}
+$("calc").addEventListener("click",function(){
+  var err=$("err"); err.classList.add("hidden");
+  var sex=document.querySelector('input[name="sex"]:checked').value;
+  var age=parseFloat($("age").value), wt=parseFloat($("wt").value), ht=parseFloat($("ht").value);
+  if(!(age>=15&&age<=100)||!(wt>=25&&wt<=250)||!(ht>=120&&ht<=230)){
+    err.textContent="வயது, எடை, உயரம் மூன்றையும் சரியாக உள்ளிடுங்கள் (வயது 15-100, எடை 25-250 கிலோ, உயரம் 120-230 செ.மீ).";
+    err.classList.remove("hidden"); $("out").classList.add("hidden"); return;
+  }
+  var bmr=10*wt+6.25*ht-5*age+(sex==="m"?5:-161);
+  var maint=bmr*parseFloat($("act").value);
+  var target=maint+parseFloat($("goal").value);
+  var bmi=wt/Math.pow(ht/100,2);
+  $("target").textContent=fmt(target);
+  $("bmr").textContent=fmt(bmr)+" கலோரி";
+  $("maint").textContent=fmt(maint)+" கலோரி";
+  $("bmi").textContent=bmi.toFixed(1);
+  $("b1").textContent=fmt(target*0.25)+" கலோரி";
+  $("b2").textContent=fmt(target*0.35)+" கலோரி";
+  $("b3").textContent=fmt(target*0.10)+" கலோரி";
+  $("b4").textContent=fmt(target*0.30)+" கலோரி";
+  $("carb").textContent=fmt(target*0.45/4)+" முதல் "+fmt(target*0.55/4)+" கிராம் வரை";
+  var floor=(sex==="m")?1500:1200, lw=$("lowwarn");
+  if(target<floor){lw.textContent="இந்த அளவு மிகவும் குறைவு. இவ்வளவு குறைவாகச் சாப்பிடுவதற்கு முன் மருத்துவரிடம் கேளுங்கள்."; lw.classList.remove("hidden");}
+  else{lw.classList.add("hidden");}
+  $("out").classList.remove("hidden");
+  $("out").scrollIntoView({behavior:"smooth",block:"start"});
+});
+})();
+</script>
+</body>
+</html>
